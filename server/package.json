@@ -1,0 +1,12 @@
+{
+  "name": "studyflow-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:init": "node --env-file=.env src/db/init.js"
+  },
+  "dependencies": {
+    "mongoose": "^9.0.0"
+  }
+}
