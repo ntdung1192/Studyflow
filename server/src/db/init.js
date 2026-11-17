@@ -1,4 +1,5 @@
 import { connectDatabase, disconnectDatabase } from './connection.js';
+import { Availability } from '../models/Availability.js';
 import { Goal } from '../models/Goal.js';
 import { GroupMember } from '../models/GroupMember.js';
 import { GroupTask } from '../models/GroupTask.js';
@@ -8,7 +9,7 @@ import { Subject } from '../models/Subject.js';
 import { Task } from '../models/Task.js';
 import { User } from '../models/User.js';
 
-const models = [User, Subject, Task, Schedule, Goal, StudyGroup, GroupMember, GroupTask];
+const models = [User, Subject, Task, Schedule, Availability, Goal, StudyGroup, GroupMember, GroupTask];
 
 try {
   const connection = await connectDatabase();

@@ -1,7 +1,7 @@
 # StudyFlow Pro – Đặc tả yêu cầu MVP
 
-**Trạng thái:** Bản dự thảo để nhóm review  
-**Phạm vi:** Các chức năng cốt lõi đã được leader chốt; chưa phải quyết định cuối cùng của cả nhóm.  
+**Trạng thái:** Phạm vi MVP đã được nhóm thống nhất
+**Phạm vi:** Đặc tả triển khai theo phạm vi MVP đã thống nhất.
 **Liên quan:** [Tiến độ dự án](./project-progress.md), [Phạm vi MVP](./mvp-scope.md)
 
 ## 1. Mục tiêu và người dùng
@@ -66,6 +66,7 @@ StudyFlow Pro giúp sinh viên quản lý việc học cá nhân và phối hợ
 
 **Quy tắc:**
 - Tiêu đề là bắt buộc.
+- Thời lượng ước tính `estimatedMinutes` là số nguyên từ 15 đến 480 phút; mặc định 60 phút nếu người dùng không nhập.
 - Chỉ chủ sở hữu được truy cập công việc cá nhân.
 - Công việc quá hạn vẫn được giữ và đánh dấu quá hạn; không tự xóa.
 
@@ -121,10 +122,11 @@ StudyFlow Pro giúp sinh viên quản lý việc học cá nhân và phối hợ
 - Chỉ thành viên đang hoạt động mới truy cập dữ liệu của nhóm.
 - Người ngoài nhóm không xem được nhóm hoặc nhiệm vụ nhóm.
 - Thành viên bị xóa/rời nhóm mất quyền truy cập dữ liệu nhóm ngay sau đó.
+- Lời mời gửi tới email của tài khoản đã đăng ký và được xử lý trong ứng dụng; không gửi email tự động hoặc dùng mã mời trong MVP.
+- Mỗi cặp nhóm/người dùng chỉ có một membership. Mời lại người có trạng thái `DECLINED`, `REMOVED` hoặc `LEFT` sẽ đặt lại membership đó thành `PENDING`; không tạo document thứ hai. Không được mời lại khi đang `PENDING` hoặc `ACTIVE`.
+- Khi thành viên rời/bị loại, nhiệm vụ nhóm đã tạo vẫn được giữ để bảo toàn lịch sử. OWNER có thể giao lại nhiệm vụ chưa hoàn thành cho thành viên ACTIVE; thành viên rời nhóm không còn quyền xem/cập nhật nhiệm vụ.
 
 **Tiêu chí chấp nhận:** Người dùng tạo nhóm, xử lý lời mời, xem thành viên; người ngoài nhóm bị từ chối truy cập.
-
-**Cần nhóm quyết định:** Lời mời được gửi bằng cách nào trong MVP (tìm theo email/tài khoản hay mã tham gia). Email tự động nằm ngoài phạm vi ưu tiên.
 
 ### 3.7. Nhiệm vụ nhóm
 
@@ -138,11 +140,30 @@ StudyFlow Pro giúp sinh viên quản lý việc học cá nhân và phối hợ
 **Quy tắc:**
 - Nhiệm vụ luôn thuộc một nhóm.
 - Người được giao phải là thành viên đang hoạt động trong nhóm.
-- Chỉ thành viên nhóm truy cập được nhiệm vụ; quyền quản lý/xóa cần được nhóm thống nhất.
+- Thành viên ACTIVE có thể tạo nhiệm vụ; người tạo hoặc OWNER được sửa/xóa; người được giao chỉ được đổi trạng thái.
+- Nếu người được giao rời/bị loại khỏi nhóm, nhiệm vụ được giữ nguyên; OWNER phải giao lại nhiệm vụ chưa hoàn thành nếu cần tiếp tục.
 
-**Tiêu chí chấp nhận:** Thành viên giao được nhiệm vụ cho thành viên khác; người được giao cập nhật được trạng thái; người ngoài nhóm không xem được nhiệm vụ.
+**Tiêu chí chấp nhận:** Thành viên giao được nhiệm vụ cho thành viên ACTIVE; người được giao cập nhật được trạng thái; người ngoài nhóm không xem được nhiệm vụ; quyền của thành viên vừa rời nhóm bị từ chối ở request kế tiếp.
 
-### 3.8. Dashboard và thống kê cơ bản
+### 3.8. Thời gian rảnh và Smart Planner cá nhân
+
+**Người dùng có thể:**
+- Khai báo các khung giờ rảnh lặp hằng tuần theo thứ trong tuần.
+- Yêu cầu gợi ý lịch học cho các công việc cá nhân chưa hoàn thành.
+- Xem các công việc chưa xếp được lịch và lý do.
+- Chọn gợi ý phù hợp để thêm thành buổi học vào lịch; gợi ý không tự động ghi vào lịch.
+
+**Quy tắc MVP:**
+- Khung giờ rảnh dùng múi giờ IANA của tài khoản (mặc định `Asia/Ho_Chi_Minh`); ngày giờ của lịch lưu/trả qua API theo ISO 8601 UTC.
+- Khung giờ rảnh là giờ địa phương trong tuần, không có ngoại lệ ngày nghỉ trong MVP.
+- Planner xử lý công việc `TODO`/`IN_PROGRESS`, xếp theo hạn gần nhất rồi thời điểm tạo; mỗi công việc được xếp thành một phiên liên tục theo `estimatedMinutes`.
+- Gợi ý chỉ nằm trong khung rảnh và trước hạn công việc; không được chồng lên lịch cá nhân hiện có hoặc gợi ý khác trong cùng lần tính.
+- Nếu không đủ một khung liên tục trước hạn, công việc được trả trong danh sách chưa xếp được; không tự chia nhỏ phiên.
+- Planner là thuật toán quy tắc, không dùng AI và không lập lịch cho nhóm.
+
+**Tiêu chí chấp nhận:** Khung rảnh chồng lấn bị từ chối; gợi ý không chồng lịch, nằm trước deadline, xếp công việc theo thứ tự xác định; công việc không đủ chỗ được trả kèm lý do; chỉ khi người dùng chọn thì buổi học mới được lưu.
+
+### 3.9. Dashboard và thống kê cơ bản
 
 **Dashboard hiển thị:**
 - Số môn học cá nhân.
@@ -160,35 +181,29 @@ StudyFlow Pro giúp sinh viên quản lý việc học cá nhân và phối hợ
 
 ## 4. Phần mở rộng nếu còn thời gian
 
-### Thời gian rảnh và Smart Planner cá nhân
-
-- Người dùng tự khai báo các khung giờ rảnh.
-- Planner có thể gợi ý thời gian học dựa trên thời gian rảnh, lịch học và hạn công việc.
-- Gợi ý là hỗ trợ lập kế hoạch; người dùng quyết định có thêm vào lịch hay không.
-- Không yêu cầu AI hoặc lập kế hoạch phối hợp nhiều thành viên.
-
 ### Thống kê nâng cao
 
 Có thể bổ sung biểu đồ hoặc so sánh tiến độ theo tuần/tháng sau khi các chức năng cốt lõi hoạt động ổn định.
 
-## 5. Các quyết định đề xuất để nhóm xác nhận
+## 5. Quy ước triển khai thống nhất
 
-Các tài liệu Database và API đang dùng các phương án đơn giản dưới đây để làm bản thiết kế đầu tiên. Đây chưa phải quyết định cuối cùng của cả nhóm.
+Các quy ước dưới đây được dùng thống nhất khi triển khai database và API theo MVP.
 
 | Chủ đề | Đề xuất cho MVP | Lý do |
 |---|---|---|
-| Lịch học lặp | Chỉ lưu từng buổi có ngày cụ thể; chưa lặp hằng tuần | Giảm độ phức tạp của lịch và truy vấn |
-| Mời thành viên | Mời theo email tài khoản đã đăng ký; chấp nhận/từ chối trong ứng dụng; không gửi email | Đáp ứng luồng nhóm mà không cần dịch vụ gửi mail |
+| Lịch học | Mỗi lịch là một buổi có ngày/giờ cụ thể; khung rảnh là quy tắc lặp tuần riêng | Tách lịch bận thực tế khỏi thời gian có thể học |
+| Mời thành viên | Mời theo email tài khoản đã đăng ký; chấp nhận/từ chối trong ứng dụng; membership cũ được tái sử dụng khi mời lại | Khớp unique index theo nhóm/người dùng |
 | Quyền nhiệm vụ nhóm | Thành viên có thể tạo; OWNER/người tạo sửa hoặc xóa; người được giao đổi trạng thái | Phân quyền MVP dễ hiểu |
 | Xóa môn học đang được dùng | Chặn xóa và yêu cầu gỡ liên kết công việc/lịch trước | Tránh xóa dữ liệu liên quan ngoài ý muốn |
-| Tiến độ mục tiêu | Chủ sở hữu nhập thủ công 0–100% | Không cần thêm hệ thống theo dõi hoạt động |
+| Tiến độ mục tiêu | Chủ sở hữu nhập thủ công 0–100%; `COMPLETED` khi progress=100, trạng thái được suy ra không lưu trùng | Tránh status lệch với progress |
+| Smart Planner | Phiên liên tục, không tự chia nhỏ; deadline gần nhất trước; gợi ý chưa lưu cho đến khi người dùng xác nhận | Thuật toán đơn giản, kết quả giải thích được |
 | Mật khẩu | Tối thiểu 8 ký tự | Quy tắc đơn giản cho MVP |
 | Không có quyền truy cập | Trả `404` cho tài nguyên riêng tư/nhóm không thuộc quyền người dùng | Hạn chế tiết lộ tài nguyên có tồn tại hay không |
 | Đăng xuất JWT | Xóa token phía client; không thu hồi token phía server trong MVP | Giữ xác thực stateless đơn giản |
 | Phân trang | Chưa bắt buộc; giới hạn số bản ghi trả về và bổ sung phân trang khi cần | Phù hợp quy mô demo, giảm phạm vi ban đầu |
 
-**Cần nhóm xác nhận:** các đề xuất trên, cùng quy trình OWNER chuyển quyền/rời nhóm hoặc đóng nhóm. Nếu nhóm chọn phương án khác, cần cập nhật đồng thời đặc tả, database design và API contract.
+Nếu nhóm thay đổi một quy ước, cần cập nhật đồng thời đặc tả, database design và API contract.
 
 ## 6. Tiêu chí hoàn thành MVP cốt lõi
 
-MVP cốt lõi sẵn sàng demo khi các luồng đăng nhập, quản lý dữ liệu học tập cá nhân, nhóm và nhiệm vụ nhóm hoạt động end-to-end; dashboard lấy dữ liệu thật; quyền riêng tư được kiểm tra ở backend. Phần mở rộng không được làm chậm các luồng cốt lõi.
+MVP cốt lõi sẵn sàng demo khi đăng nhập, dữ liệu học tập cá nhân, nhóm/nhiệm vụ nhóm, khai báo thời gian rảnh và Smart Planner quy tắc hoạt động end-to-end; dashboard lấy dữ liệu thật; quyền riêng tư được kiểm tra ở backend. Thống kê nâng cao không được làm chậm các luồng cốt lõi.

@@ -4,6 +4,7 @@ const scheduleSchema = new mongoose.Schema(
   {
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', default: null, index: true },
+    taskId: { type: mongoose.Schema.Types.ObjectId, ref: 'Task', default: null },
     title: { type: String, required: true, trim: true, maxlength: 200 },
     startsAt: { type: Date, required: true },
     endsAt: {
@@ -23,5 +24,6 @@ const scheduleSchema = new mongoose.Schema(
 );
 
 scheduleSchema.index({ ownerId: 1, startsAt: 1 });
+scheduleSchema.index({ ownerId: 1, taskId: 1 });
 
 export const Schedule = mongoose.models.Schedule || mongoose.model('Schedule', scheduleSchema);

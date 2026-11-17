@@ -7,14 +7,10 @@ const goalSchema = new mongoose.Schema(
     description: { type: String, trim: true, maxlength: 2000, default: null },
     dueAt: { type: Date, default: null },
     progress: { type: Number, min: 0, max: 100, default: 0, required: true },
-    status: { type: String, enum: ['ACTIVE', 'COMPLETED'], default: 'ACTIVE', required: true },
   },
   { timestamps: true, collection: 'goals' },
 );
 
-goalSchema.index({ ownerId: 1, status: 1 });
-goalSchema.pre('validate', function syncStatusFromProgress() {
-  this.status = this.progress === 100 ? 'COMPLETED' : 'ACTIVE';
-});
+goalSchema.index({ ownerId: 1, dueAt: 1 });
 
 export const Goal = mongoose.models.Goal || mongoose.model('Goal', goalSchema);

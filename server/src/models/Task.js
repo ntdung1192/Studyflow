@@ -7,6 +7,14 @@ const taskSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true, maxlength: 200 },
     description: { type: String, trim: true, maxlength: 5000, default: null },
     dueAt: { type: Date, required: true },
+    estimatedMinutes: {
+      type: Number,
+      min: 15,
+      max: 480,
+      default: 60,
+      required: true,
+      validate: Number.isInteger,
+    },
     status: {
       type: String,
       enum: ['TODO', 'IN_PROGRESS', 'DONE'],
