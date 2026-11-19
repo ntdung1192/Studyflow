@@ -28,6 +28,14 @@ Backend dùng Node.js, Express, MongoDB/Mongoose, bcryptjs và JWT. Contract end
 
    Lệnh này tạo các collection MVP và indexes; không thêm tài khoản hay dữ liệu mẫu.
 
+   Tạo/cập nhật dữ liệu demo cho database local:
+
+   ```powershell
+   npm.cmd run db:seed
+   ```
+
+   Tài khoản mặc định được đọc từ `DEMO_EMAIL` và `DEMO_PASSWORD` trong `.env`. Seed chỉ dùng cho local; không chạy trên production.
+
 4. Khởi động API:
 
    ```powershell
@@ -38,7 +46,7 @@ Mặc định API chạy tại `http://127.0.0.1:4000/api/v1`. `GET /api/v1/heal
 
 ## Tạo tài khoản dùng thử
 
-Gọi `POST /api/v1/auth/register`:
+Seed tạo sẵn tài khoản ở trên. Hoặc tự đăng ký bằng `POST /api/v1/auth/register`:
 
 ```json
 {
@@ -49,7 +57,7 @@ Gọi `POST /api/v1/auth/register`:
 }
 ```
 
-Đăng nhập qua `POST /api/v1/auth/login`; dùng `token` trong header `Authorization: Bearer <token>` cho route riêng tư. Không có tài khoản thử nghiệm mặc định.
+Đăng nhập qua `POST /api/v1/auth/login`; dùng `token` trong header `Authorization: Bearer <token>` cho route riêng tư.
 
 ## Nhóm endpoint
 
@@ -59,6 +67,8 @@ Gọi `POST /api/v1/auth/register`:
 - Nhóm: `/groups`, `/me/group-invitations`, `/group-invitations/:invitationId`, group members và group tasks
 
 Danh sách hỗ trợ `page` mặc định 1 và `limit` mặc định 20, tối đa 100. Dữ liệu cá nhân luôn truy vấn theo user trong token; quyền nhóm luôn kiểm tra membership ACTIVE tại backend.
+
+Xem hướng dẫn dành cho frontend tại [`../docs/api.md`](../docs/api.md).
 
 ## Bảo vệ dữ liệu local
 

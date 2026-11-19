@@ -13,12 +13,13 @@
 - API CRUD cho môn học, công việc, lịch, mục tiêu, thời gian rảnh; API nhóm, lời mời, thành viên, chuyển OWNER và nhiệm vụ nhóm.
 - API gợi ý Smart Planner cá nhân và dashboard tổng hợp.
 - Proxy `/api` từ Vite sang API local; có hướng dẫn chạy server, tạo tài khoản thử và sử dụng bearer token tại [server/README.md](../server/README.md).
+- Có script `db:seed` để tạo dữ liệu mẫu local và API client dùng chung ở `client/src/services/api.js`.
 
 ## Còn phải hoàn tất trước khi chuyển hẳn sang frontend
 
-1. Cài/chạy MongoDB local và xác nhận `db:init`, API khởi động, các luồng auth/API chính hoạt động với database thật.
+1. Hoàn tất database `studyflow` trên Atlas; cấu hình quyền và IP cho từng thành viên, rồi xác nhận `db:init`, `db:seed`, API khởi động với URI cloud.
 2. Xử lý các lỗi tích hợp phát hiện được; rà tương thích thực tế giữa phản hồi API và contract.
-3. Chuẩn bị dữ liệu/tài khoản demo dùng chung và hướng dẫn bàn giao cuối cho nhóm frontend.
+3. Bàn giao README 5 phút, [`api.md`](./api.md), tài khoản demo local và `client/src/services/api.js` cho nhóm frontend.
 
 MongoDB chưa chạy trong môi trường hiện tại nên các luồng backend chưa được xác nhận end-to-end. Kiểm tra cú pháp JavaScript đã thực hiện; chưa chạy test suite.
 
