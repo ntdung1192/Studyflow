@@ -7,7 +7,7 @@ export const requireAuth = asyncRoute(async (req, res, next) => {
   if (!token) fail(401, 'UNAUTHENTICATED', 'Vui lòng đăng nhập.');
   let payload;
   try {
-    payload = jwt.verify(token, process.env.JWT_SECRET);
+    payload = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
   } catch {
     fail(401, 'UNAUTHENTICATED', 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.');
   }

@@ -15,7 +15,7 @@ const groupTaskSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true, collection: 'groupTasks' },
+  { timestamps: true, collection: 'groupTasks' }
 );
 
 groupTaskSchema.index({ groupId: 1, dueAt: 1 });

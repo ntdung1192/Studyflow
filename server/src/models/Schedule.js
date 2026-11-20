@@ -20,7 +20,7 @@ const scheduleSchema = new mongoose.Schema(
     location: { type: String, trim: true, maxlength: 200, default: null },
     notes: { type: String, trim: true, maxlength: 2000, default: null },
   },
-  { timestamps: true, collection: 'schedules' },
+  { timestamps: true, collection: 'schedules' }
 );
 
 scheduleSchema.index({ ownerId: 1, startsAt: 1 });

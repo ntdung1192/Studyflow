@@ -28,86 +28,86 @@ try {
         passwordHash: await bcrypt.hash(password, 12),
       },
     },
-    { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true }
+    { upsert: true, returnDocument: 'after', runValidators: true, setDefaultsOnInsert: true }
   );
 
   const subject = await Subject.findOneAndUpdate(
-    { ownerId: user._id, name: 'Cơ sở dữ liệu' },
-    { $set: { code: 'CSDL', description: 'Dữ liệu mẫu cho frontend.' } },
-    { upsert: true, new: true, runValidators: true }
+    { ownerId: user._id, name: 'CÆ¡ sá»Ÿ dá»¯ liá»‡u' },
+    { $set: { code: 'CSDL', description: 'Dá»¯ liá»‡u máº«u cho frontend.' } },
+    { upsert: true, returnDocument: 'after', runValidators: true }
   );
 
   const task = await Task.findOneAndUpdate(
-    { ownerId: user._id, title: 'Ôn mô hình dữ liệu' },
+    { ownerId: user._id, title: 'Ã”n mÃ´ hÃ¬nh dá»¯ liá»‡u' },
     {
       $set: {
         subjectId: subject._id,
-        description: 'Task mẫu được tạo bởi db:seed.',
+        description: 'Task máº«u Ä‘Æ°á»£c táº¡o bá»Ÿi db:seed.',
         dueAt: new Date(Date.now() + 2 * 86400000),
         estimatedMinutes: 60,
         status: 'TODO',
       },
     },
-    { upsert: true, new: true, runValidators: true }
+    { upsert: true, returnDocument: 'after', runValidators: true }
   );
 
   const scheduleStart = new Date(Date.now() + 86400000);
   scheduleStart.setMinutes(0, 0, 0);
   await Schedule.findOneAndUpdate(
-    { ownerId: user._id, title: 'Buổi học mẫu' },
+    { ownerId: user._id, title: 'Buá»•i há»c máº«u' },
     {
       $set: {
         subjectId: subject._id,
         taskId: task._id,
         startsAt: scheduleStart,
         endsAt: new Date(scheduleStart.getTime() + 60 * 60000),
-        location: 'Thư viện',
-        notes: 'Dữ liệu mẫu được tạo bởi db:seed.',
+        location: 'ThÆ° viá»‡n',
+        notes: 'Dá»¯ liá»‡u máº«u Ä‘Æ°á»£c táº¡o bá»Ÿi db:seed.',
       },
     },
-    { upsert: true, new: true, runValidators: true }
+    { upsert: true, returnDocument: 'after', runValidators: true }
   );
 
   await Goal.findOneAndUpdate(
-    { ownerId: user._id, title: 'Hoàn thành chương cơ sở dữ liệu' },
+    { ownerId: user._id, title: 'HoÃ n thÃ nh chÆ°Æ¡ng cÆ¡ sá»Ÿ dá»¯ liá»‡u' },
     {
       $set: {
-        description: 'Mục tiêu demo.',
+        description: 'Má»¥c tiÃªu demo.',
         dueAt: new Date(Date.now() + 7 * 86400000),
         progress: 35,
       },
     },
-    { upsert: true, new: true, runValidators: true }
+    { upsert: true, returnDocument: 'after', runValidators: true }
   );
 
   await Availability.findOneAndUpdate(
     { ownerId: user._id, dayOfWeek: 1, startMinute: 540 },
     { $set: { endMinute: 720 } },
-    { upsert: true, new: true, runValidators: true }
+    { upsert: true, returnDocument: 'after', runValidators: true }
   );
 
   const group = await StudyGroup.findOneAndUpdate(
-    { ownerId: user._id, name: 'Nhóm học mẫu' },
-    { $set: { description: 'Nhóm demo cho frontend.' } },
-    { upsert: true, new: true, runValidators: true }
+    { ownerId: user._id, name: 'NhÃ³m há»c máº«u' },
+    { $set: { description: 'NhÃ³m demo cho frontend.' } },
+    { upsert: true, returnDocument: 'after', runValidators: true }
   );
   await GroupMember.findOneAndUpdate(
     { groupId: group._id, userId: user._id },
     { $set: { status: 'ACTIVE', joinedAt: new Date() } },
-    { upsert: true, new: true, runValidators: true }
+    { upsert: true, returnDocument: 'after', runValidators: true }
   );
   await GroupTask.findOneAndUpdate(
-    { groupId: group._id, title: 'Chuẩn bị ví dụ minh họa' },
+    { groupId: group._id, title: 'Chuáº©n bá»‹ vÃ­ dá»¥ minh há»a' },
     {
       $set: {
         createdBy: user._id,
         assigneeId: user._id,
-        description: 'Nhiệm vụ nhóm mẫu.',
+        description: 'Nhiá»‡m vá»¥ nhÃ³m máº«u.',
         dueAt: new Date(Date.now() + 3 * 86400000),
         status: 'IN_PROGRESS',
       },
     },
-    { upsert: true, new: true, runValidators: true }
+    { upsert: true, returnDocument: 'after', runValidators: true }
   );
 
   console.log(`Demo data ready for ${email}.`);

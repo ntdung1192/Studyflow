@@ -33,7 +33,7 @@ Tất cả route dưới đây cần 🔒. Mọi record tự gắn với user tr
 | GET / PATCH / DELETE | `/tasks/:taskId`                | PATCH `{title?,description?,subjectId?,dueAt?,estimatedMinutes?,status?}`                                       | GET/PATCH `{data:task}`; DELETE `204`               |
 | GET / POST           | `/schedules`                    | POST `{title,startsAt,endsAt,subjectId?,taskId?,location?,notes?}`; GET query `from,to`                         | GET `{data:[schedule]}`; POST `201 {data:schedule}` |
 | GET / PATCH / DELETE | `/schedules/:scheduleId`        | PATCH các trường POST ở trên                                                                                    | GET/PATCH `{data:schedule}`; DELETE `204`           |
-| GET / POST           | `/goals`                        | POST `{title,description?,dueAt?}`                                                                              | GET `{data:[goal]}`; POST `201 {data:goal}`         |
+| GET / POST           | `/goals`                        | POST `{title,description?,dueAt?}`; GET query `status` (`ACTIVE`, `COMPLETED`)                                  | GET `{data:[goal]}`; POST `201 {data:goal}`         |
 | GET / PATCH / DELETE | `/goals/:goalId`                | PATCH `{title?,description?,dueAt?,progress?}`                                                                  | GET/PATCH `{data:goal}`; DELETE `204`               |
 | GET / POST           | `/availability`                 | POST `{dayOfWeek,startMinute,endMinute}`                                                                        | GET `{data:[window]}`; POST `201 {data:window}`     |
 | PATCH / DELETE       | `/availability/:availabilityId` | PATCH các trường POST ở trên                                                                                    | PATCH `{data:window}`; DELETE `204`                 |
@@ -63,19 +63,19 @@ Planner chỉ đưa gợi ý, chưa lưu schedule. `reason` có thể là `OVERD
 
 Tất cả route cần 🔒. Chỉ thành viên ACTIVE mới đọc nội dung nhóm; OWNER mới quản lý thành viên và nhóm.
 
-| Method               | Path                               | Body                                                 | Thành công                                      |
-| -------------------- | ---------------------------------- | ---------------------------------------------------- | ----------------------------------------------- |
-| GET / POST           | `/groups`                          | POST `{name,description?}`                           | GET `{data:[group]}`; POST `201 {data:group}`   |
-| GET / PATCH          | `/groups/:groupId`                 | PATCH `{name?,description?}`                         | `{data:group}`                                  |
-| GET                  | `/groups/:groupId/members`         | —                                                    | `{data:[{id,name,email,status,role,joinedAt}]}` |
-| POST                 | `/groups/:groupId/invitations`     | `{email}`                                            | `201 {data:{id,groupId,userId,status}}`         |
-| GET                  | `/me/group-invitations`            | —                                                    | `{data:[{id,group,invitedBy,createdAt}]}`       |
-| PATCH                | `/group-invitations/:invitationId` | `{status: ACTIVE or DECLINED}`                       | `{data:{status}}`                               |
-| PATCH                | `/groups/:groupId/owner`           | `{newOwnerId}`                                       | `{data:{groupId,ownerId}}`                      |
-| DELETE               | `/groups/:groupId/members/:userId` | —                                                    | `204`                                           |
-| DELETE               | `/groups/:groupId/membership`      | —                                                    | `204`                                           |
-| GET / POST           | `/groups/:groupId/tasks`           | POST `{title,description?,assigneeId,dueAt}`         | GET `{data:[task]}`; POST `201 {data:task}`     |
-| GET / PATCH / DELETE | `/groups/:groupId/tasks/:taskId`   | PATCH task fields; assigned user may send `{status}` | GET/PATCH `{data:task}`; DELETE `204`           |
+| Method               | Path                               | Body                                                 | Thành công                                                |
+| -------------------- | ---------------------------------- | ---------------------------------------------------- | --------------------------------------------------------- |
+| GET / POST           | `/groups`                          | POST `{name,description?}`                           | GET `{data:[group]}`; POST `201 {data:group}`             |
+| GET / PATCH          | `/groups/:groupId`                 | PATCH `{name?,description?}`                         | `{data:group}`                                            |
+| GET                  | `/groups/:groupId/members`         | —                                                    | `{data:[{id,name,email,status,role,joinedAt}]}`           |
+| POST                 | `/groups/:groupId/invitations`     | `{email}`                                            | `201 {data:{id,groupId,userId,status}}`                   |
+| GET                  | `/me/group-invitations`            | —                                                    | `{data:[{id,group,invitedBy:{id,name,email},createdAt}]}` |
+| PATCH                | `/group-invitations/:invitationId` | `{status: ACTIVE or DECLINED}`                       | `{data:{status}}`                                         |
+| PATCH                | `/groups/:groupId/owner`           | `{newOwnerId}`                                       | `{data:{groupId,ownerId}}`                                |
+| DELETE               | `/groups/:groupId/members/:userId` | —                                                    | `204`                                                     |
+| DELETE               | `/groups/:groupId/membership`      | —                                                    | `204`                                                     |
+| GET / POST           | `/groups/:groupId/tasks`           | POST `{title,description?,assigneeId,dueAt}`         | GET `{data:[task]}`; POST `201 {data:task}`               |
+| GET / PATCH / DELETE | `/groups/:groupId/tasks/:taskId`   | PATCH task fields; assigned user may send `{status}` | GET/PATCH `{data:task}`; DELETE `204`                     |
 
 OWNER hoặc người tạo nhiệm vụ được sửa/xóa; người được giao chỉ cập nhật trạng thái. Lỗi quyền thường gặp: `403 FORBIDDEN`; nhóm/tài nguyên không thuộc quyền trả `404 NOT_FOUND`. Lỗi nghiệp vụ phổ biến: `409 INVITATION_EXISTS`, `409 OWNER_MUST_TRANSFER`, `400 VALIDATION_ERROR`.
 

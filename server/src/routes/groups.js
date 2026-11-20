@@ -42,12 +42,18 @@ function memberDto(member, ownerId) {
   };
 }
 
+const TASK_STATUSES = ['TODO', 'IN_PROGRESS', 'DONE'];
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 router.get(
   '/groups',
   asyncRoute(async (req, res) => {
+    const { skip, limit } = pageOptions(req.query);
     const memberships = await GroupMember.find({ userId: req.user._id, status: 'ACTIVE' })
       .populate('groupId')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
     res.json({
       data: memberships
         .filter((m) => m.groupId)
@@ -108,12 +114,15 @@ router.get(
   '/groups/:groupId/members',
   asyncRoute(async (req, res) => {
     const { group } = await membership(req.params.groupId, req.user._id);
+    const { skip, limit } = pageOptions(req.query);
     const members = await GroupMember.find({
       groupId: group._id,
       status: { $in: ['ACTIVE', 'PENDING'] },
     })
       .populate('userId', 'name email')
-      .sort({ createdAt: 1 });
+      .sort({ createdAt: 1 })
+      .skip(skip)
+      .limit(limit);
     res.json({ data: members.filter((m) => m.userId).map((m) => memberDto(m, group.ownerId)) });
   })
 );
@@ -122,6 +131,10 @@ router.post(
   asyncRoute(async (req, res) => {
     const { group } = await owner(req.params.groupId, req.user._id);
     const email = requiredString(req.body.email, 'email', 254).toLowerCase();
+    if (!EMAIL_REGEX.test(email))
+      fail(400, 'VALIDATION_ERROR', 'Dữ liệu gửi lên không hợp lệ.', [
+        { field: 'email', message: 'Email không hợp lệ.' },
+      ]);
     const invitee = await User.findOne({ email });
     if (!invitee) fail(404, 'USER_NOT_FOUND', 'Không tìm thấy tài khoản với email này.');
     let member = await GroupMember.findOne({ groupId: group._id, userId: invitee._id });
@@ -152,6 +165,7 @@ router.get(
     const { skip, limit } = pageOptions(req.query);
     const rows = await GroupMember.find({ userId: req.user._id, status: 'PENDING' })
       .populate('groupId', 'name description ownerId')
+      .populate('invitedBy', 'name email')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -161,7 +175,7 @@ router.get(
         .map((row) => ({
           id: String(row._id),
           group: serialize(row.groupId),
-          invitedBy: String(row.invitedBy),
+          invitedBy: row.invitedBy ? serialize(row.invitedBy) : null,
           createdAt: row.createdAt,
         })),
     });
@@ -240,7 +254,13 @@ router.get(
     const { group } = await membership(req.params.groupId, req.user._id);
     const { skip, limit } = pageOptions(req.query);
     const filter = { groupId: group._id };
-    if (req.query.status) filter.status = req.query.status;
+    if (req.query.status !== undefined) {
+      if (typeof req.query.status !== 'string' || !TASK_STATUSES.includes(req.query.status))
+        fail(400, 'VALIDATION_ERROR', 'Trạng thái lọc không hợp lệ.', [
+          { field: 'status', message: 'Trạng thái phải là TODO, IN_PROGRESS hoặc DONE.' },
+        ]);
+      filter.status = req.query.status;
+    }
     if (req.query.assigneeId) filter.assigneeId = objectId(req.query.assigneeId, 'assigneeId');
     res.json(data(await GroupTask.find(filter).sort({ dueAt: 1 }).skip(skip).limit(limit)));
   })
@@ -281,13 +301,11 @@ router.patch(
     const task = await GroupTask.findOne({ _id: req.params.taskId, groupId: group._id });
     if (!task) fail(404, 'NOT_FOUND', 'Không tìm thấy nhiệm vụ.');
     const mayManage = isOwner || String(task.createdBy) === String(req.user._id);
-    const allowed = mayManage
-      ? ['title', 'description', 'dueAt', 'assigneeId', 'status']
-      : ['status'];
-    if (
-      !Object.keys(req.body).length ||
-      Object.keys(req.body).some((key) => !allowed.includes(key))
-    )
+    const allFields = ['title', 'description', 'dueAt', 'assigneeId', 'status'];
+    const keys = Object.keys(req.body);
+    if (!keys.length || keys.some((key) => !allFields.includes(key)))
+      fail(400, 'VALIDATION_ERROR', 'Trường cập nhật không hợp lệ.');
+    if (!mayManage && keys.some((key) => key !== 'status'))
       fail(403, 'FORBIDDEN', 'Bạn không được sửa các trường đã gửi.');
     if ('title' in req.body) task.title = requiredString(req.body.title, 'title');
     if ('description' in req.body)

@@ -21,7 +21,7 @@ Mở `server/.env`, đặt `MONGODB_URI` tới MongoDB local hoặc database `st
 Ví dụ khởi tạo secret trong PowerShell:
 
 ```powershell
-[Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
+node -e "console.log(require('node:crypto').randomBytes(32).toString('base64'))"
 ```
 
 ### 2. Chuẩn bị database và dữ liệu demo

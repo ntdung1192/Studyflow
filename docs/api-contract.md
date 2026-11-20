@@ -33,17 +33,22 @@ Các endpoint danh sách trả mảng trong `data` và hỗ trợ `page` (mặc 
 
 ## 2. Auth
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| POST | `/auth/register` | Tạo tài khoản |
-| POST | `/auth/login` | Đăng nhập và nhận token |
-| GET | `/auth/me` | Lấy tài khoản hiện tại |
-| PATCH | `/auth/me` | Cập nhật tên hoặc múi giờ IANA |
+| Method | Endpoint         | Mục đích                       |
+| ------ | ---------------- | ------------------------------ |
+| POST   | `/auth/register` | Tạo tài khoản                  |
+| POST   | `/auth/login`    | Đăng nhập và nhận token        |
+| GET    | `/auth/me`       | Lấy tài khoản hiện tại         |
+| PATCH  | `/auth/me`       | Cập nhật tên hoặc múi giờ IANA |
 
 **Register body:**
 
 ```json
-{ "name": "Nguyen An", "email": "an@example.com", "password": "example-password", "timeZone": "Asia/Ho_Chi_Minh" }
+{
+  "name": "Nguyen An",
+  "email": "an@example.com",
+  "password": "example-password",
+  "timeZone": "Asia/Ho_Chi_Minh"
+}
 ```
 
 **Register response `201`:** `{ "data": { "user": { "id": "...", "name": "Nguyen An", "email": "an@example.com" } } }`
@@ -56,13 +61,13 @@ Các endpoint danh sách trả mảng trong `data` và hỗ trợ `page` (mặc 
 
 ## 3. Môn học
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| GET | `/subjects` | Liệt kê môn học của người dùng hiện tại |
-| POST | `/subjects` | Tạo môn học |
-| GET | `/subjects/:subjectId` | Xem chi tiết môn học |
-| PATCH | `/subjects/:subjectId` | Sửa môn học |
-| DELETE | `/subjects/:subjectId` | Xóa môn học nếu không còn liên kết |
+| Method | Endpoint               | Mục đích                                |
+| ------ | ---------------------- | --------------------------------------- |
+| GET    | `/subjects`            | Liệt kê môn học của người dùng hiện tại |
+| POST   | `/subjects`            | Tạo môn học                             |
+| GET    | `/subjects/:subjectId` | Xem chi tiết môn học                    |
+| PATCH  | `/subjects/:subjectId` | Sửa môn học                             |
+| DELETE | `/subjects/:subjectId` | Xóa môn học nếu không còn liên kết      |
 
 **Body tạo/sửa:** `name` bắt buộc; `code`, `description` tùy chọn. Không nhận `ownerId` từ client.
 
@@ -70,45 +75,51 @@ Nếu còn task hoặc schedule liên kết, DELETE trả `409 SUBJECT_IN_USE`.
 
 ## 4. Công việc cá nhân
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| GET | `/tasks` | Danh sách công việc cá nhân |
-| POST | `/tasks` | Tạo công việc |
-| GET | `/tasks/:taskId` | Xem chi tiết |
-| PATCH | `/tasks/:taskId` | Sửa trường được phép |
-| DELETE | `/tasks/:taskId` | Xóa công việc |
+| Method | Endpoint         | Mục đích                    |
+| ------ | ---------------- | --------------------------- |
+| GET    | `/tasks`         | Danh sách công việc cá nhân |
+| POST   | `/tasks`         | Tạo công việc               |
+| GET    | `/tasks/:taskId` | Xem chi tiết                |
+| PATCH  | `/tasks/:taskId` | Sửa trường được phép        |
+| DELETE | `/tasks/:taskId` | Xóa công việc               |
 
 **Query GET:** `status`, `subjectId`, `dueBefore`, `dueAfter` (đều tùy chọn).
 
 **Body tạo:**
 
 ```json
-{ "title": "Ôn chương 1", "description": "", "subjectId": "...", "dueAt": "2026-11-20T10:00:00.000Z", "estimatedMinutes": 60 }
+{
+  "title": "Ôn chương 1",
+  "description": "",
+  "subjectId": "...",
+  "dueAt": "2026-11-20T10:00:00.000Z",
+  "estimatedMinutes": 60
+}
 ```
 
 `estimatedMinutes` tùy chọn, mặc định 60; nếu gửi phải là số nguyên 15–480. Trạng thái mặc định `TODO`; PATCH trạng thái chỉ nhận `TODO`, `IN_PROGRESS`, `DONE`. Backend phải xác nhận `subjectId` thuộc cùng người dùng.
 
 ## 5. Lịch học cá nhân
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| GET | `/schedules?from=...&to=...` | Lấy lịch trong khoảng thời gian |
-| POST | `/schedules` | Tạo buổi học |
-| GET | `/schedules/:scheduleId` | Xem chi tiết |
-| PATCH | `/schedules/:scheduleId` | Sửa buổi học |
-| DELETE | `/schedules/:scheduleId` | Xóa buổi học |
+| Method | Endpoint                     | Mục đích                        |
+| ------ | ---------------------------- | ------------------------------- |
+| GET    | `/schedules?from=...&to=...` | Lấy lịch trong khoảng thời gian |
+| POST   | `/schedules`                 | Tạo buổi học                    |
+| GET    | `/schedules/:scheduleId`     | Xem chi tiết                    |
+| PATCH  | `/schedules/:scheduleId`     | Sửa buổi học                    |
+| DELETE | `/schedules/:scheduleId`     | Xóa buổi học                    |
 
 **Body tạo:** `title`, `startsAt`, `endsAt` bắt buộc; `subjectId`, `taskId`, `location`, `notes` tùy chọn. `endsAt` phải sau `startsAt`; subject/task phải thuộc cùng người dùng. Mỗi record là một buổi học cụ thể. Lịch chồng giờ với buổi khác của cùng người dùng bị từ chối bằng `409 SCHEDULE_CONFLICT`.
 
 ## 6. Mục tiêu cá nhân
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| GET | `/goals` | Danh sách mục tiêu |
-| POST | `/goals` | Tạo mục tiêu |
-| GET | `/goals/:goalId` | Xem chi tiết |
-| PATCH | `/goals/:goalId` | Sửa mục tiêu/tiến độ |
-| DELETE | `/goals/:goalId` | Xóa mục tiêu |
+| Method | Endpoint         | Mục đích             |
+| ------ | ---------------- | -------------------- |
+| GET    | `/goals`         | Danh sách mục tiêu   |
+| POST   | `/goals`         | Tạo mục tiêu         |
+| GET    | `/goals/:goalId` | Xem chi tiết         |
+| PATCH  | `/goals/:goalId` | Sửa mục tiêu/tiến độ |
+| DELETE | `/goals/:goalId` | Xóa mục tiêu         |
 
 **Body tạo:** `{ "title": "Hoàn thành khóa học", "description": "...", "dueAt": "2026-12-20T00:00:00.000Z" }`.
 
@@ -116,20 +127,20 @@ Tiến độ nhập thủ công qua PATCH, là số nguyên 0–100. API trả `
 
 ## 7. Thời gian rảnh
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| GET | `/availability` | Liệt kê khung giờ rảnh hằng tuần |
-| POST | `/availability` | Tạo khung giờ rảnh |
-| PATCH | `/availability/:availabilityId` | Sửa khung giờ |
-| DELETE | `/availability/:availabilityId` | Xóa khung giờ |
+| Method | Endpoint                        | Mục đích                         |
+| ------ | ------------------------------- | -------------------------------- |
+| GET    | `/availability`                 | Liệt kê khung giờ rảnh hằng tuần |
+| POST   | `/availability`                 | Tạo khung giờ rảnh               |
+| PATCH  | `/availability/:availabilityId` | Sửa khung giờ                    |
+| DELETE | `/availability/:availabilityId` | Xóa khung giờ                    |
 
 **Body tạo/sửa:** `{ "dayOfWeek": 1, "startMinute": 540, "endMinute": 720 }`; ngày ISO weekday (1=Thứ Hai, 7=Chủ Nhật), phút địa phương theo múi giờ tài khoản. `endMinute` lớn hơn `startMinute` và tối đa 1440. Khung qua nửa đêm không hỗ trợ. Chồng lấn trong cùng thứ trả `409 AVAILABILITY_CONFLICT`.
 
 ## 8. Smart Planner cá nhân
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| POST | `/planner/suggestions` | Tính gợi ý mà không ghi dữ liệu |
+| Method | Endpoint               | Mục đích                        |
+| ------ | ---------------------- | ------------------------------- |
+| POST   | `/planner/suggestions` | Tính gợi ý mà không ghi dữ liệu |
 
 **Body:** `{ "from": "2026-11-16", "to": "2026-11-29" }`; ngày địa phương theo múi giờ tài khoản, khoảng tối đa 14 ngày.
 
@@ -137,19 +148,19 @@ Planner lấy Task `TODO`/`IN_PROGRESS` có hạn đến hết `to`, xếp theo 
 
 ## 9. Nhóm học tập và lời mời
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| GET | `/groups` | Liệt kê nhóm người dùng đang là thành viên ACTIVE |
-| POST | `/groups` | Tạo nhóm; người tạo thành OWNER |
-| GET | `/groups/:groupId` | Xem nhóm nếu có quyền |
-| PATCH | `/groups/:groupId` | OWNER sửa tên/mô tả |
-| GET | `/groups/:groupId/members` | Liệt kê thành viên |
-| POST | `/groups/:groupId/invitations` | OWNER mời tài khoản đã đăng ký bằng email |
-| GET | `/me/group-invitations` | Danh sách lời mời đang chờ của người dùng |
-| PATCH | `/group-invitations/:invitationId` | Chấp nhận hoặc từ chối lời mời |
-| PATCH | `/groups/:groupId/owner` | OWNER chuyển quyền cho thành viên ACTIVE khác |
-| DELETE | `/groups/:groupId/members/:userId` | OWNER loại thành viên |
-| DELETE | `/groups/:groupId/membership` | Thành viên tự rời nhóm |
+| Method | Endpoint                           | Mục đích                                          |
+| ------ | ---------------------------------- | ------------------------------------------------- |
+| GET    | `/groups`                          | Liệt kê nhóm người dùng đang là thành viên ACTIVE |
+| POST   | `/groups`                          | Tạo nhóm; người tạo thành OWNER                   |
+| GET    | `/groups/:groupId`                 | Xem nhóm nếu có quyền                             |
+| PATCH  | `/groups/:groupId`                 | OWNER sửa tên/mô tả                               |
+| GET    | `/groups/:groupId/members`         | Liệt kê thành viên                                |
+| POST   | `/groups/:groupId/invitations`     | OWNER mời tài khoản đã đăng ký bằng email         |
+| GET    | `/me/group-invitations`            | Danh sách lời mời đang chờ của người dùng         |
+| PATCH  | `/group-invitations/:invitationId` | Chấp nhận hoặc từ chối lời mời                    |
+| PATCH  | `/groups/:groupId/owner`           | OWNER chuyển quyền cho thành viên ACTIVE khác     |
+| DELETE | `/groups/:groupId/members/:userId` | OWNER loại thành viên                             |
+| DELETE | `/groups/:groupId/membership`      | Thành viên tự rời nhóm                            |
 
 **Tạo nhóm body:** `{ "name": "Nhóm Giải tích", "description": "..." }`.
 
@@ -165,27 +176,32 @@ Khi thành viên rời/bị loại, giữ nguyên GroupTask để bảo toàn l�
 
 ## 10. Nhiệm vụ nhóm
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| GET | `/groups/:groupId/tasks` | Liệt kê nhiệm vụ nhóm |
-| POST | `/groups/:groupId/tasks` | Tạo và giao nhiệm vụ |
-| GET | `/groups/:groupId/tasks/:taskId` | Xem nhiệm vụ |
-| PATCH | `/groups/:groupId/tasks/:taskId` | Sửa nhiệm vụ hoặc trạng thái |
-| DELETE | `/groups/:groupId/tasks/:taskId` | Xóa nhiệm vụ |
+| Method | Endpoint                         | Mục đích                     |
+| ------ | -------------------------------- | ---------------------------- |
+| GET    | `/groups/:groupId/tasks`         | Liệt kê nhiệm vụ nhóm        |
+| POST   | `/groups/:groupId/tasks`         | Tạo và giao nhiệm vụ         |
+| GET    | `/groups/:groupId/tasks/:taskId` | Xem nhiệm vụ                 |
+| PATCH  | `/groups/:groupId/tasks/:taskId` | Sửa nhiệm vụ hoặc trạng thái |
+| DELETE | `/groups/:groupId/tasks/:taskId` | Xóa nhiệm vụ                 |
 
 **Body tạo:**
 
 ```json
-{ "title": "Chuẩn bị phần ví dụ", "description": "...", "assigneeId": "...", "dueAt": "2026-11-22T10:00:00.000Z" }
+{
+  "title": "Chuẩn bị phần ví dụ",
+  "description": "...",
+  "assigneeId": "...",
+  "dueAt": "2026-11-22T10:00:00.000Z"
+}
 ```
 
 `createdBy` lấy từ token; `groupId` lấy từ path. `assigneeId` phải là thành viên ACTIVE của nhóm. Người tạo hoặc OWNER sửa/xóa; người được giao chỉ đổi trạng thái. Mọi route xác minh membership trước khi trả dữ liệu.
 
 ## 11. Dashboard
 
-| Method | Endpoint | Mục đích |
-|---|---|---|
-| GET | `/dashboard/summary` | Tổng hợp dữ liệu người dùng hiện tại |
+| Method | Endpoint             | Mục đích                             |
+| ------ | -------------------- | ------------------------------------ |
+| GET    | `/dashboard/summary` | Tổng hợp dữ liệu người dùng hiện tại |
 
 **Response:**
 

@@ -8,6 +8,5 @@ export const useUIStore = create((set) => ({
       isSidebarCollapsed: !state.isSidebarCollapsed,
     })),
 
-  setSidebarCollapsed: (isCollapsed) =>
-    set({ isSidebarCollapsed: isCollapsed }),
+  setSidebarCollapsed: (isCollapsed) => set({ isSidebarCollapsed: isCollapsed }),
 }));

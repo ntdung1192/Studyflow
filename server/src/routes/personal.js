@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import { Availability } from '../models/Availability.js';
 import { Goal } from '../models/Goal.js';
 import { Schedule } from '../models/Schedule.js';
@@ -86,11 +85,24 @@ router.delete(
   })
 );
 
+const TASK_STATUSES = ['TODO', 'IN_PROGRESS', 'DONE'];
+const GOAL_STATUSES = ['ACTIVE', 'COMPLETED'];
+const goalDto = (doc) => ({
+  ...serialize(doc),
+  status: doc.progress === 100 ? 'COMPLETED' : 'ACTIVE',
+});
+
 router.get(
   '/tasks',
   asyncRoute(async (req, res) => {
     const filter = { ownerId: req.user._id };
-    if (req.query.status) filter.status = req.query.status;
+    if (req.query.status !== undefined) {
+      if (typeof req.query.status !== 'string' || !TASK_STATUSES.includes(req.query.status))
+        fail(400, 'VALIDATION_ERROR', 'Trạng thái lọc không hợp lệ.', [
+          { field: 'status', message: 'Trạng thái phải là TODO, IN_PROGRESS hoặc DONE.' },
+        ]);
+      filter.status = req.query.status;
+    }
     if (req.query.subjectId) filter.subjectId = objectId(req.query.subjectId, 'subjectId');
     if (req.query.dueBefore || req.query.dueAfter) filter.dueAt = {};
     if (req.query.dueBefore) filter.dueAt.$lte = validDate(req.query.dueBefore, 'dueBefore');
@@ -150,7 +162,12 @@ router.patch(
 router.delete(
   '/tasks/:id',
   asyncRoute(async (req, res) => {
-    await (await existsForUser(Task, req.params.id, req.user._id, 'taskId')).deleteOne();
+    const doc = await existsForUser(Task, req.params.id, req.user._id, 'taskId');
+    await Schedule.updateMany(
+      { ownerId: req.user._id, taskId: doc._id },
+      { $set: { taskId: null } }
+    );
+    await doc.deleteOne();
     res.status(204).end();
   })
 );
@@ -245,7 +262,19 @@ router.delete(
 
 router.get(
   '/goals',
-  list(Goal, (req) => ({ ownerId: req.user._id }))
+  asyncRoute(async (req, res) => {
+    const filter = { ownerId: req.user._id };
+    if (req.query.status !== undefined) {
+      if (typeof req.query.status !== 'string' || !GOAL_STATUSES.includes(req.query.status))
+        fail(400, 'VALIDATION_ERROR', 'Trạng thái lọc không hợp lệ.', [
+          { field: 'status', message: 'Trạng thái phải là ACTIVE hoặc COMPLETED.' },
+        ]);
+      filter.progress = req.query.status === 'COMPLETED' ? 100 : { $lt: 100 };
+    }
+    const { skip, limit } = pageOptions(req.query);
+    const goals = await Goal.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    res.json({ data: goals.map(goalDto) });
+  })
 );
 router.post(
   '/goals',
@@ -256,16 +285,14 @@ router.post(
       description: optionalString(req.body.description, 'description'),
       dueAt: req.body.dueAt ? validDate(req.body.dueAt, 'dueAt') : null,
     });
-    res
-      .status(201)
-      .json(data({ ...doc.toObject(), status: doc.progress === 100 ? 'COMPLETED' : 'ACTIVE' }));
+    res.status(201).json({ data: goalDto(doc) });
   })
 );
 router.get(
   '/goals/:id',
   asyncRoute(async (req, res) => {
     const doc = await existsForUser(Goal, req.params.id, req.user._id, 'goalId');
-    res.json(data({ ...doc.toObject(), status: doc.progress === 100 ? 'COMPLETED' : 'ACTIVE' }));
+    res.json({ data: goalDto(doc) });
   })
 );
 router.patch(
@@ -282,9 +309,15 @@ router.patch(
     if ('description' in req.body)
       doc.description = optionalString(req.body.description, 'description');
     if ('dueAt' in req.body) doc.dueAt = req.body.dueAt ? validDate(req.body.dueAt, 'dueAt') : null;
-    if ('progress' in req.body) doc.progress = req.body.progress;
+    if ('progress' in req.body) {
+      if (!Number.isInteger(req.body.progress) || req.body.progress < 0 || req.body.progress > 100)
+        fail(400, 'VALIDATION_ERROR', 'Dữ liệu gửi lên không hợp lệ.', [
+          { field: 'progress', message: 'Tiến độ phải là số nguyên từ 0 đến 100.' },
+        ]);
+      doc.progress = req.body.progress;
+    }
     await doc.save();
-    res.json(data({ ...doc.toObject(), status: doc.progress === 100 ? 'COMPLETED' : 'ACTIVE' }));
+    res.json({ data: goalDto(doc) });
   })
 );
 router.delete(

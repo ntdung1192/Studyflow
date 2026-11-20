@@ -9,7 +9,17 @@ import { Subject } from '../models/Subject.js';
 import { Task } from '../models/Task.js';
 import { User } from '../models/User.js';
 
-const models = [User, Subject, Task, Schedule, Availability, Goal, StudyGroup, GroupMember, GroupTask];
+const models = [
+  User,
+  Subject,
+  Task,
+  Schedule,
+  Availability,
+  Goal,
+  StudyGroup,
+  GroupMember,
+  GroupTask,
+];
 
 try {
   const connection = await connectDatabase();

@@ -6,9 +6,10 @@ const studyGroupSchema = new mongoose.Schema(
     description: { type: String, trim: true, maxlength: 1000, default: null },
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   },
-  { timestamps: true, collection: 'studyGroups' },
+  { timestamps: true, collection: 'studyGroups' }
 );
 
 studyGroupSchema.index({ ownerId: 1, createdAt: -1 });
 
-export const StudyGroup = mongoose.models.StudyGroup || mongoose.model('StudyGroup', studyGroupSchema);
+export const StudyGroup =
+  mongoose.models.StudyGroup || mongoose.model('StudyGroup', studyGroupSchema);

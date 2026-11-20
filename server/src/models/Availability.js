@@ -7,7 +7,7 @@ const availabilitySchema = new mongoose.Schema(
     startMinute: { type: Number, min: 0, max: 1439, required: true, validate: Number.isInteger },
     endMinute: { type: Number, min: 1, max: 1440, required: true, validate: Number.isInteger },
   },
-  { timestamps: true, collection: 'availability' },
+  { timestamps: true, collection: 'availability' }
 );
 
 availabilitySchema.pre('validate', function validateWindow() {

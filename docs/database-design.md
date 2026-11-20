@@ -16,57 +16,57 @@
 
 ### 2.1. `users`
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `_id` | ObjectId | Có | ID người dùng |
-| `name` | String | Có | Họ tên, trim |
-| `email` | String | Có | Lưu lowercase, unique |
-| `passwordHash` | String | Có | Hash bcrypt, không bao giờ trả qua API |
-| `timeZone` | String | Có | Mã IANA; mặc định `Asia/Ho_Chi_Minh`, dùng để diễn giải khung giờ rảnh và ngày địa phương |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu     | Bắt buộc | Ghi chú                                                                                   |
+| ------------------------ | -------- | -------: | ----------------------------------------------------------------------------------------- |
+| `_id`                    | ObjectId |       Có | ID người dùng                                                                             |
+| `name`                   | String   |       Có | Họ tên, trim                                                                              |
+| `email`                  | String   |       Có | Lưu lowercase, unique                                                                     |
+| `passwordHash`           | String   |       Có | Hash bcrypt, không bao giờ trả qua API                                                    |
+| `timeZone`               | String   |       Có | Mã IANA; mặc định `Asia/Ho_Chi_Minh`, dùng để diễn giải khung giờ rảnh và ngày địa phương |
+| `createdAt`, `updatedAt` | Date     |       Có | Timestamp                                                                                 |
 
 **Index:** unique trên `email`.
 
 ### 2.2. `subjects`
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `ownerId` | ObjectId → User | Có | Chủ sở hữu |
-| `name` | String | Có | Tên môn học |
-| `code` | String | Không | Mã môn |
-| `description` | String | Không | Mô tả |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu            | Bắt buộc | Ghi chú     |
+| ------------------------ | --------------- | -------: | ----------- |
+| `ownerId`                | ObjectId → User |       Có | Chủ sở hữu  |
+| `name`                   | String          |       Có | Tên môn học |
+| `code`                   | String          |    Không | Mã môn      |
+| `description`            | String          |    Không | Mô tả       |
+| `createdAt`, `updatedAt` | Date            |       Có | Timestamp   |
 
 **Index:** `{ ownerId: 1, name: 1 }`.
 
 ### 2.3. `tasks` (công việc cá nhân)
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `ownerId` | ObjectId → User | Có | Chủ sở hữu |
-| `subjectId` | ObjectId → Subject hoặc null | Không | Nếu có, subject phải thuộc cùng owner |
-| `title` | String | Có | Tiêu đề |
-| `description` | String | Không | Mô tả |
-| `dueAt` | Date | Có | Hạn hoàn thành |
-| `estimatedMinutes` | Number | Có | Số nguyên 15–480; mặc định 60, thời lượng Planner dùng để xếp một phiên liên tục |
-| `status` | String | Có | `TODO`, `IN_PROGRESS`, `DONE`; mặc định `TODO` |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu                         | Bắt buộc | Ghi chú                                                                          |
+| ------------------------ | ---------------------------- | -------: | -------------------------------------------------------------------------------- |
+| `ownerId`                | ObjectId → User              |       Có | Chủ sở hữu                                                                       |
+| `subjectId`              | ObjectId → Subject hoặc null |    Không | Nếu có, subject phải thuộc cùng owner                                            |
+| `title`                  | String                       |       Có | Tiêu đề                                                                          |
+| `description`            | String                       |    Không | Mô tả                                                                            |
+| `dueAt`                  | Date                         |       Có | Hạn hoàn thành                                                                   |
+| `estimatedMinutes`       | Number                       |       Có | Số nguyên 15–480; mặc định 60, thời lượng Planner dùng để xếp một phiên liên tục |
+| `status`                 | String                       |       Có | `TODO`, `IN_PROGRESS`, `DONE`; mặc định `TODO`                                   |
+| `createdAt`, `updatedAt` | Date                         |       Có | Timestamp                                                                        |
 
 **Index:** `{ ownerId: 1, dueAt: 1 }`, `{ ownerId: 1, status: 1 }`, `{ subjectId: 1 }`.
 
 ### 2.4. `schedules`
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `ownerId` | ObjectId → User | Có | Chủ sở hữu |
-| `subjectId` | ObjectId → Subject hoặc null | Không | Subject phải thuộc cùng owner |
-| `taskId` | ObjectId → Task hoặc null | Không | Task cá nhân mà phiên học được tạo từ Planner gắn với cùng owner |
-| `title` | String | Có | Tên buổi học |
-| `startsAt` | Date | Có | Thời điểm bắt đầu |
-| `endsAt` | Date | Có | Phải sau `startsAt` |
-| `location` | String | Không | Địa điểm |
-| `notes` | String | Không | Ghi chú |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu                         | Bắt buộc | Ghi chú                                                          |
+| ------------------------ | ---------------------------- | -------: | ---------------------------------------------------------------- |
+| `ownerId`                | ObjectId → User              |       Có | Chủ sở hữu                                                       |
+| `subjectId`              | ObjectId → Subject hoặc null |    Không | Subject phải thuộc cùng owner                                    |
+| `taskId`                 | ObjectId → Task hoặc null    |    Không | Task cá nhân mà phiên học được tạo từ Planner gắn với cùng owner |
+| `title`                  | String                       |       Có | Tên buổi học                                                     |
+| `startsAt`               | Date                         |       Có | Thời điểm bắt đầu                                                |
+| `endsAt`                 | Date                         |       Có | Phải sau `startsAt`                                              |
+| `location`               | String                       |    Không | Địa điểm                                                         |
+| `notes`                  | String                       |    Không | Ghi chú                                                          |
+| `createdAt`, `updatedAt` | Date                         |       Có | Timestamp                                                        |
 
 **Index:** `{ ownerId: 1, startsAt: 1 }`, `{ ownerId: 1, taskId: 1 }`.
 
@@ -74,13 +74,13 @@ Mỗi document là một buổi học có ngày cụ thể; lịch lặp tuần 
 
 ### 2.5. `availability` (khung giờ rảnh hằng tuần)
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `ownerId` | ObjectId → User | Có | Chủ sở hữu |
-| `dayOfWeek` | Number | Có | ISO weekday: 1=Thứ Hai … 7=Chủ Nhật |
-| `startMinute` | Number | Có | Phút tính từ 00:00 giờ địa phương, từ 0 đến 1439 |
-| `endMinute` | Number | Có | Phút tính từ 00:00; phải lớn hơn `startMinute` và tối đa 1440 |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu            | Bắt buộc | Ghi chú                                                       |
+| ------------------------ | --------------- | -------: | ------------------------------------------------------------- |
+| `ownerId`                | ObjectId → User |       Có | Chủ sở hữu                                                    |
+| `dayOfWeek`              | Number          |       Có | ISO weekday: 1=Thứ Hai … 7=Chủ Nhật                           |
+| `startMinute`            | Number          |       Có | Phút tính từ 00:00 giờ địa phương, từ 0 đến 1439              |
+| `endMinute`              | Number          |       Có | Phút tính từ 00:00; phải lớn hơn `startMinute` và tối đa 1440 |
+| `createdAt`, `updatedAt` | Date            |       Có | Timestamp                                                     |
 
 **Index:** `{ ownerId: 1, dayOfWeek: 1, startMinute: 1 }`.
 
@@ -88,14 +88,14 @@ Mỗi document là một buổi học có ngày cụ thể; lịch lặp tuần 
 
 ### 2.6. `goals`
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `ownerId` | ObjectId → User | Có | Chủ sở hữu |
-| `title` | String | Có | Tên mục tiêu |
-| `description` | String | Không | Mô tả |
-| `dueAt` | Date | Không | Hạn mục tiêu |
-| `progress` | Number | Có | Số nguyên 0–100, mặc định 0 |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu            | Bắt buộc | Ghi chú                     |
+| ------------------------ | --------------- | -------: | --------------------------- |
+| `ownerId`                | ObjectId → User |       Có | Chủ sở hữu                  |
+| `title`                  | String          |       Có | Tên mục tiêu                |
+| `description`            | String          |    Không | Mô tả                       |
+| `dueAt`                  | Date            |    Không | Hạn mục tiêu                |
+| `progress`               | Number          |       Có | Số nguyên 0–100, mặc định 0 |
+| `createdAt`, `updatedAt` | Date            |       Có | Timestamp                   |
 
 **Index:** `{ ownerId: 1, dueAt: 1 }`.
 
@@ -103,26 +103,26 @@ Mỗi document là một buổi học có ngày cụ thể; lịch lặp tuần 
 
 ### 2.7. `studyGroups`
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `_id` | ObjectId | Có | ID nhóm |
-| `name` | String | Có | Tên nhóm |
-| `description` | String | Không | Mô tả |
-| `ownerId` | ObjectId → User | Có | Nguồn dữ liệu chuẩn để xác định OWNER hiện tại |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu            | Bắt buộc | Ghi chú                                        |
+| ------------------------ | --------------- | -------: | ---------------------------------------------- |
+| `_id`                    | ObjectId        |       Có | ID nhóm                                        |
+| `name`                   | String          |       Có | Tên nhóm                                       |
+| `description`            | String          |    Không | Mô tả                                          |
+| `ownerId`                | ObjectId → User |       Có | Nguồn dữ liệu chuẩn để xác định OWNER hiện tại |
+| `createdAt`, `updatedAt` | Date            |       Có | Timestamp                                      |
 
 **Index:** `{ ownerId: 1, createdAt: -1 }`.
 
 ### 2.8. `groupMembers`
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `groupId` | ObjectId → StudyGroup | Có | Nhóm |
-| `userId` | ObjectId → User | Có | Thành viên được mời/tham gia |
-| `status` | String | Có | `PENDING`, `ACTIVE`, `DECLINED`, `REMOVED`, `LEFT` |
-| `invitedBy` | ObjectId → User | Không | Người gửi lời mời |
-| `joinedAt` | Date | Không | Thời điểm chấp nhận |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu                  | Bắt buộc | Ghi chú                                            |
+| ------------------------ | --------------------- | -------: | -------------------------------------------------- |
+| `groupId`                | ObjectId → StudyGroup |       Có | Nhóm                                               |
+| `userId`                 | ObjectId → User       |       Có | Thành viên được mời/tham gia                       |
+| `status`                 | String                |       Có | `PENDING`, `ACTIVE`, `DECLINED`, `REMOVED`, `LEFT` |
+| `invitedBy`              | ObjectId → User       |    Không | Người gửi lời mời                                  |
+| `joinedAt`               | Date                  |    Không | Thời điểm chấp nhận                                |
+| `createdAt`, `updatedAt` | Date                  |       Có | Timestamp                                          |
 
 **Index:** unique `{ groupId: 1, userId: 1 }`; `{ userId: 1, status: 1 }`.
 
@@ -130,16 +130,16 @@ Mỗi document là một buổi học có ngày cụ thể; lịch lặp tuần 
 
 ### 2.9. `groupTasks` (nhiệm vụ nhóm)
 
-| Trường | Kiểu | Bắt buộc | Ghi chú |
-|---|---|---:|---|
-| `groupId` | ObjectId → StudyGroup | Có | Nhóm sở hữu nhiệm vụ |
-| `createdBy` | ObjectId → User | Có | Thành viên tạo |
-| `assigneeId` | ObjectId → User | Có | Thành viên được giao |
-| `title` | String | Có | Tiêu đề |
-| `description` | String | Không | Mô tả |
-| `dueAt` | Date | Có | Hạn hoàn thành |
-| `status` | String | Có | `TODO`, `IN_PROGRESS`, `DONE`; mặc định `TODO` |
-| `createdAt`, `updatedAt` | Date | Có | Timestamp |
+| Trường                   | Kiểu                  | Bắt buộc | Ghi chú                                        |
+| ------------------------ | --------------------- | -------: | ---------------------------------------------- |
+| `groupId`                | ObjectId → StudyGroup |       Có | Nhóm sở hữu nhiệm vụ                           |
+| `createdBy`              | ObjectId → User       |       Có | Thành viên tạo                                 |
+| `assigneeId`             | ObjectId → User       |       Có | Thành viên được giao                           |
+| `title`                  | String                |       Có | Tiêu đề                                        |
+| `description`            | String                |    Không | Mô tả                                          |
+| `dueAt`                  | Date                  |       Có | Hạn hoàn thành                                 |
+| `status`                 | String                |       Có | `TODO`, `IN_PROGRESS`, `DONE`; mặc định `TODO` |
+| `createdAt`, `updatedAt` | Date                  |       Có | Timestamp                                      |
 
 **Index:** `{ groupId: 1, dueAt: 1 }`, `{ assigneeId: 1, status: 1 }`.
 
@@ -159,13 +159,13 @@ Mỗi document là một buổi học có ngày cụ thể; lịch lặp tuần 
 
 Các feature dùng chung tên collection và field như trên; không tự tạo collection trùng mục đích hoặc đổi tên field riêng ở từng nhánh.
 
-| Phần việc | Collections chính | Trách nhiệm dữ liệu |
-|---|---|---|
-| Leader – Auth/Groups | `users`, `studyGroups`, `groupMembers` | Tài khoản, membership, lời mời và quyền truy cập nhóm |
-| Thành viên 2 – Subjects/Tasks | `subjects`, `tasks` | CRUD môn học và công việc cá nhân |
-| Thành viên 3 – Schedule/Planner | `schedules`, `availability`, `tasks` | CRUD lịch, khung rảnh và gợi ý Smart Planner cá nhân |
-| Thành viên 4 – Goals/Dashboard | `goals` và truy vấn tổng hợp | CRUD mục tiêu và tổng hợp số liệu từ collections hiện có; không lưu bản sao số liệu Dashboard |
-| Nhiệm vụ nhóm | `groupTasks` | Leader hoặc người được phân công phối hợp với owner nhóm để thống nhất quyền và API |
+| Phần việc                       | Collections chính                      | Trách nhiệm dữ liệu                                                                           |
+| ------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Leader – Auth/Groups            | `users`, `studyGroups`, `groupMembers` | Tài khoản, membership, lời mời và quyền truy cập nhóm                                         |
+| Thành viên 2 – Subjects/Tasks   | `subjects`, `tasks`                    | CRUD môn học và công việc cá nhân                                                             |
+| Thành viên 3 – Schedule/Planner | `schedules`, `availability`, `tasks`   | CRUD lịch, khung rảnh và gợi ý Smart Planner cá nhân                                          |
+| Thành viên 4 – Goals/Dashboard  | `goals` và truy vấn tổng hợp           | CRUD mục tiêu và tổng hợp số liệu từ collections hiện có; không lưu bản sao số liệu Dashboard |
+| Nhiệm vụ nhóm                   | `groupTasks`                           | Leader hoặc người được phân công phối hợp với owner nhóm để thống nhất quyền và API           |
 
 ### Ví dụ document và tham chiếu
 
@@ -178,7 +178,14 @@ Môn học:
 Công việc cá nhân liên kết môn học:
 
 ```json
-{ "_id": "TASK_ID", "ownerId": "USER_ID", "subjectId": "SUBJECT_ID", "title": "Ôn chương 1", "dueAt": "2026-11-20T10:00:00.000Z", "status": "TODO" }
+{
+  "_id": "TASK_ID",
+  "ownerId": "USER_ID",
+  "subjectId": "SUBJECT_ID",
+  "title": "Ôn chương 1",
+  "dueAt": "2026-11-20T10:00:00.000Z",
+  "status": "TODO"
+}
 ```
 
 Membership đang hoạt động; API xác định role bằng cách so `userId` với `studyGroups.ownerId`:
@@ -187,7 +194,7 @@ Membership đang hoạt động; API xác định role bằng cách so `userId` 
 { "_id": "MEMBERSHIP_ID", "groupId": "GROUP_ID", "userId": "USER_ID", "status": "ACTIVE" }
 ```
 
-## 4. Quy tắc xóa và toàn vẹn dữ liệu
+## 5. Quy tắc xóa và toàn vẹn dữ liệu
 
 - Xóa Subject đang được Task hoặc Schedule tham chiếu: trả lỗi `409 SUBJECT_IN_USE`; yêu cầu người dùng bỏ liên kết hoặc chọn môn khác trước. Không xóa dây chuyền.
 - Xóa nhóm chưa thuộc MVP cốt lõi. OWNER chuyển quyền cho thành viên ACTIVE khác trước khi rời; backend cập nhật `studyGroups.ownerId`, role được suy ra nên không cần cập nhật từng membership.
@@ -196,7 +203,7 @@ Membership đang hoạt động; API xác định role bằng cách so `userId` 
 - Lịch do người dùng xác nhận từ Planner là document `schedules` có `taskId` tùy chọn; lịch thủ công có thể để trống `taskId`.
 - Không cho tạo/sửa schedule chồng lấn với schedule khác của cùng owner; trả `409 SCHEDULE_CONFLICT`. Planner áp dụng cùng quy tắc trước khi trả gợi ý.
 
-## 5. Các quy ước triển khai
+## 6. Các quy ước triển khai
 
 1. Lịch học là từng buổi có ngày/giờ cụ thể; chỉ availability lặp hằng tuần.
 2. Lời mời nhóm gửi đến tài khoản đã đăng ký; membership cũ được tái sử dụng khi mời lại.

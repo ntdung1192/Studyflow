@@ -22,7 +22,7 @@ const taskSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true, collection: 'tasks' },
+  { timestamps: true, collection: 'tasks' }
 );
 
 taskSchema.index({ ownerId: 1, dueAt: 1 });
