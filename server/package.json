@@ -4,9 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "db:init": "node --env-file=.env src/db/init.js"
+    "dev": "node --watch --env-file=.env src/index.js",
+    "start": "node --env-file=.env src/index.js",
+    "test": "node --test",
+    "db:init": "node --env-file=.env src/db/init.js",
+    "db:seed": "node --env-file=.env src/db/seed.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.0"
   }
 }

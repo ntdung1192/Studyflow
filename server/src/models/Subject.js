@@ -7,7 +7,7 @@ const subjectSchema = new mongoose.Schema(
     code: { type: String, trim: true, maxlength: 40, default: null },
     description: { type: String, trim: true, maxlength: 1000, default: null },
   },
-  { timestamps: true, collection: 'subjects' },
+  { timestamps: true, collection: 'subjects' }
 );
 
 subjectSchema.index({ ownerId: 1, name: 1 });

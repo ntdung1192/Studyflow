@@ -14,8 +14,23 @@ export default function WorkspacePage() {
   const [title, description] = pages[pathname] ?? ['Không gian học tập', ''];
   return (
     <main className="workspace-page">
-      <div className="page-heading"><div><p className="eyebrow">STUDYFLOW PRO</p><h1>{title}</h1><p className="page-description">{description}</p></div></div>
-      <section className="empty-workspace"><span className="empty-icon" aria-hidden="true">✦</span><h2>Khu vực này đã sẵn sàng</h2><p>Khung giao diện đã được tạo. Thành viên phụ trách có thể bổ sung chức năng và dữ liệu vào đây.</p></section>
+      <div className="page-heading">
+        <div>
+          <p className="eyebrow">STUDYFLOW PRO</p>
+          <h1>{title}</h1>
+          <p className="page-description">{description}</p>
+        </div>
+      </div>
+      <section className="empty-workspace">
+        <span className="empty-icon" aria-hidden="true">
+          ✦
+        </span>
+        <h2>Khu vực này đã sẵn sàng</h2>
+        <p>
+          Khung giao diện đã được tạo. Thành viên phụ trách có thể bổ sung chức năng và dữ liệu vào
+          đây.
+        </p>
+      </section>
     </main>
   );
 }
