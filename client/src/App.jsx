@@ -5,6 +5,8 @@ import LoginPage from './features/auth/pages/LoginPage';
 import RegisterPage from './features/auth/pages/RegisterPage';
 import DashboardPage from './features/dashboard/pages/DashboardPage';
 import WorkspacePage from './features/dashboard/pages/WorkspacePage';
+import GroupDetailPage from './features/groups/pages/GroupDetailPage';
+import GroupsPage from './features/groups/pages/GroupsPage';
 import AppLayout from './layouts/AppLayout';
 
 function App() {
@@ -23,7 +25,8 @@ function App() {
             <Route path="/tasks" element={<WorkspacePage />} />
             <Route path="/schedule" element={<WorkspacePage />} />
             <Route path="/goals" element={<WorkspacePage />} />
-            <Route path="/groups" element={<WorkspacePage />} />
+            <Route path="/groups" element={<GroupsPage />} />
+            <Route path="/groups/:groupId" element={<GroupDetailPage />} />
             <Route path="/analytics" element={<WorkspacePage />} />
           </Route>
         </Route>
