@@ -28,7 +28,9 @@ export default function AppLayout() {
   const isSidebarCollapsed = useUIStore((state) => state.isSidebarCollapsed);
   const toggleSidebar = useUIStore((state) => state.toggleSidebar);
 
-  const currentNav = navigation.find((item) => item.to === pathname);
+  const currentNav = navigation.find(
+    (item) => pathname === item.to || pathname.startsWith(`${item.to}/`)
+  );
   const initials = getInitials(user?.name);
 
   const handleMenuToggle = () => {
