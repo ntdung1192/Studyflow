@@ -8,6 +8,7 @@ Do not invent API endpoints, database fields or business rules.
 Check existing code and project documentation first.
 
 Prioritize:
+
 - Security
 - Correct authorization
 - Maintainability

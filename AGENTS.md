@@ -1,16 +1,21 @@
 ﻿# StudyFlow Pro - AI Instructions
 
 ## Project
+
 StudyFlow Pro is a full-stack study management and team collaboration application.
 
 ## Technology
+
 - Frontend: React + Vite
 - Backend: Node.js + Express
 - Database: MongoDB + Mongoose
-- State management: Context API + Redux Toolkit
-- Authentication: JWT + bcrypt
+- Client routing: React Router
+- State management: Zustand for UI state; React Context for authentication state where needed
+- Authentication: JWT + bcryptjs
+- API base path: `/api/v1`; local Vite proxy forwards `/api` to the backend on port 4000
 
 ## Rules
+
 1. Follow the existing project architecture.
 2. Do not introduce dependencies without explaining why.
 3. Do not duplicate existing functionality.
@@ -25,12 +30,14 @@ StudyFlow Pro is a full-stack study management and team collaboration applicatio
 12. Do not claim tests passed unless they were actually executed.
 
 ## Git
+
 - Use feature branches.
 - Use Pull Requests to merge into develop.
 - Never push directly to main.
 - Use conventional commit messages.
 
 ## Collaboration
+
 - Personal data must remain private.
 - Group data is visible only to authorized active members.
 - Only group members can access group resources.

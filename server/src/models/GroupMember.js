@@ -13,10 +13,11 @@ const groupMemberSchema = new mongoose.Schema(
     invitedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     joinedAt: { type: Date, default: null },
   },
-  { timestamps: true, collection: 'groupMembers' },
+  { timestamps: true, collection: 'groupMembers' }
 );
 
 groupMemberSchema.index({ groupId: 1, userId: 1 }, { unique: true });
 groupMemberSchema.index({ userId: 1, status: 1 });
 
-export const GroupMember = mongoose.models.GroupMember || mongoose.model('GroupMember', groupMemberSchema);
+export const GroupMember =
+  mongoose.models.GroupMember || mongoose.model('GroupMember', groupMemberSchema);

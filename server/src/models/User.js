@@ -11,9 +11,10 @@ const userSchema = new mongoose.Schema(
       trim: true,
       maxlength: 254,
     },
+    timeZone: { type: String, required: true, default: 'Asia/Ho_Chi_Minh' },
     passwordHash: { type: String, required: true, select: false },
   },
-  { timestamps: true, collection: 'users' },
+  { timestamps: true, collection: 'users' }
 );
 
 export const User = mongoose.models.User || mongoose.model('User', userSchema);

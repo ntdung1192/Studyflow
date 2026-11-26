@@ -10,10 +10,12 @@ Xây dựng ứng dụng giúp sinh viên quản lý việc học cá nhân và 
 ## 2. Chức năng nằm trong phạm vi
 
 ### Tài khoản
+
 - Đăng ký, đăng nhập và đăng xuất.
 - Mỗi người dùng chỉ truy cập được dữ liệu cá nhân của mình.
 
 ### Học tập cá nhân
+
 - Quản lý môn học: tạo, xem, sửa và xóa.
 - Quản lý công việc/bài tập: tạo, xem, sửa và xóa; theo dõi hạn hoàn thành và trạng thái; liên kết công việc với môn học khi phù hợp.
 - Quản lý lịch học và thời gian rảnh.
@@ -21,6 +23,7 @@ Xây dựng ứng dụng giúp sinh viên quản lý việc học cá nhân và 
 - Smart Planner cá nhân ở mức cơ bản, sử dụng lịch học, thời gian rảnh và hạn công việc để hỗ trợ lập kế hoạch.
 
 ### Học tập nhóm
+
 - Tạo nhóm học tập và quản lý thành viên.
 - Mời người dùng tham gia; người nhận có thể chấp nhận hoặc từ chối lời mời.
 - Hỗ trợ vai trò OWNER và MEMBER.
@@ -28,6 +31,7 @@ Xây dựng ứng dụng giúp sinh viên quản lý việc học cá nhân và 
 - Chỉ thành viên có quyền mới được xem dữ liệu thuộc nhóm.
 
 ### Tổng quan
+
 - Dashboard cá nhân hiển thị thông tin học tập cơ bản.
 - Thống kê cơ bản về công việc, mục tiêu và tiến độ nhóm.
 
