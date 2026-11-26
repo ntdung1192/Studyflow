@@ -2,7 +2,18 @@
 
 Ứng dụng quản lý việc học cá nhân và phối hợp học tập theo nhóm. MVP đã được thống nhất. Frontend dùng React/Vite; backend dùng Express và MongoDB/Mongoose.
 
-## Chạy local
+## Chạy nhanh (một cú bấm)
+
+Yêu cầu: Node.js 22 trở lên.
+
+- **Windows:** bấm đúp `start.bat` ở thư mục gốc.
+- **Hoặc trong terminal** tại thư mục gốc: `npm run setup` (lần đầu) rồi `npm run dev`.
+
+Lần đầu, script tự cài dependencies cho root, `server` và `client`, tạo `server/.env` từ `.env.example` với `JWT_SECRET` ngẫu nhiên, hỏi `MONGODB_URI` (Enter để dùng MongoDB local) và hỏi có muốn khởi tạo database + dữ liệu demo không. Sau đó backend (cổng 4000) và frontend (cổng 5173) chạy cùng một cửa sổ, trình duyệt tự mở. Các lần sau chỉ cần bấm đúp lại. Đóng cửa sổ hoặc bấm Ctrl+C để dừng cả hai.
+
+Các bước thủ công bên dưới vẫn dùng được nếu muốn tự cấu hình.
+
+## Chạy local (thủ công)
 
 Yêu cầu: Node.js 22 trở lên, npm và MongoDB local hoặc database `studyflow` trên Atlas. Khi nhóm dùng chung Atlas, mọi người kết nối tới cùng database cloud; không cần cài hay tải database local. Không commit file `.env`.
 
