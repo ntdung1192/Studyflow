@@ -1,0 +1,215 @@
+/*
+  CSS cho 3 trang Môn học, Công việc, Mục tiêu.
+  Mọi class đều bắt đầu bằng "crud-" để không đụng tới CSS của phần khác.
+*/
+
+.crud-panel {
+  margin-bottom: 18px;
+  padding: 22px;
+  border: 1px solid #e8edf4;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.crud-panel h2 {
+  margin: 0 0 16px;
+  color: #142b4a;
+  font-size: 1rem;
+}
+
+/* Thông báo lỗi: dính dưới thanh trên cùng để luôn nhìn thấy khi cuộn xuống */
+.crud-error {
+  position: sticky;
+  top: 78px;
+  z-index: 2;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.86rem;
+}
+
+.crud-note {
+  margin: 0;
+  color: #8794a7;
+  font-size: 0.86rem;
+}
+
+/* Biểu mẫu và bộ lọc: tự chia cột theo bề rộng màn hình */
+.crud-form,
+.crud-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+.crud-filters {
+  margin-bottom: 16px;
+}
+
+.crud-field {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.crud-field-wide,
+.crud-actions {
+  grid-column: 1 / -1;
+}
+
+.crud-field label {
+  color: #34445d;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.crud-field input,
+.crud-field select,
+.crud-status {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #d9e1ec;
+  border-radius: 9px;
+  background: #fbfcfe;
+  color: #142b4a;
+}
+
+.crud-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Nút bấm */
+.crud-btn {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid #d9e1ec;
+  border-radius: 9px;
+  background: #fff;
+  color: #34445d;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.crud-btn:hover:not(:disabled) {
+  background: #f3f7ff;
+}
+
+.crud-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.crud-btn-primary {
+  border-color: #3478f6;
+  background: #3478f6;
+  color: #fff;
+}
+
+.crud-btn-primary:hover:not(:disabled) {
+  background: #2467e6;
+}
+
+.crud-btn-danger {
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.crud-btn-small {
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 0.8rem;
+}
+
+/* Danh sách */
+.crud-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crud-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e8edf4;
+  border-radius: 12px;
+}
+
+.crud-item-main {
+  min-width: 0;
+  flex: 1 1 260px;
+}
+
+.crud-item-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #142b4a;
+  font-weight: 600;
+}
+
+.crud-item-text {
+  margin: 4px 0 0;
+  color: #5d6b80;
+  font-size: 0.86rem;
+}
+
+.crud-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  margin: 6px 0 0;
+  color: #7c899b;
+  font-size: 0.8rem;
+}
+
+.crud-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.crud-item-actions .crud-status {
+  width: auto;
+  min-height: 34px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+}
+
+.crud-badge {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #eaf8f1;
+  color: #2b8a62;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* Thanh tiến độ của mục tiêu */
+.crud-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  color: #34445d;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.crud-progress-row progress {
+  width: min(100%, 280px);
+}
