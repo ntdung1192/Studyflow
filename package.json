@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "dev": "concurrently -k -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:open": "concurrently -k -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev -- --open\"",
     "test": "npm --prefix server test && npm --prefix client test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -21,6 +24,7 @@
   },
   "homepage": "https://github.com/ntdung1192/Studyflow#readme",
   "devDependencies": {
+    "concurrently": "^9.2.5",
     "prettier": "^3.10.1"
   }
 }
